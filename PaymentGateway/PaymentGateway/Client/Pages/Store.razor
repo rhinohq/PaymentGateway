@@ -1,0 +1,24 @@
+﻿@page "/store"
+@using PaymentGateway.Data
+@inject HttpClient Http
+
+<h3>Store</h3>
+
+<section class="products">
+    @if (Products != null)
+    {
+        @foreach (var prod in Products)
+        {
+            <ProductMeta Prod="prod"></ProductMeta>
+        }
+    }
+</section>
+
+@code {
+    public Product[] Products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Products = await Http.GetFromJsonAsync<Product[]>("Product/List");
+    }
+}

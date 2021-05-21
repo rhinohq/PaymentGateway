@@ -1,0 +1,23 @@
+﻿@using PaymentGateway.Data
+
+<div class="product-card">
+    <div class="product-image">
+        <img src="@Prod.ImageUrl">
+    </div>
+    <div class="product-info">
+        <h5>@Prod.Name</h5>
+        <h6>£@Prod.Amount</h6>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string ProdID { get; set; }
+
+    [Parameter]
+    public Product Prod { get; set; }
+
+    protected override void OnInitialized()
+    {
+    }
+}
