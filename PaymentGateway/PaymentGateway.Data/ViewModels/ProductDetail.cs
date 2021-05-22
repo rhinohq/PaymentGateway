@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace PaymentGateway.Data
+namespace PaymentGateway.Data.ViewModels
 {
-    public class Product
+    public class ProductDetail
     {
         public Guid ProductId { get; set; }
         public string Name { get; set; }
@@ -11,9 +11,9 @@ namespace PaymentGateway.Data
         public decimal Amount { get; set; }
 
         public Guid MerchantId { get; set; }
-        public Merchant Merchant { get; set; }
+        public string MerchantName { get; set; }
 
-        public Product()
+        public ProductDetail()
         {
         }
     }

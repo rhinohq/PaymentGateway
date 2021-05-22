@@ -1,11 +1,28 @@
 ﻿@page "/basket"
+@using Microsoft.AspNetCore.Authorization
+
+@using PaymentGateway.Data.ViewModels
+
+@inject HttpClient Http
+@attribute [Authorize]
 
 <h3>Basket</h3>
 
 <section class="products">
-    <ProductMeta></ProductMeta>
+    @if (Products != null)
+    {
+        @foreach (var prod in Products)
+        {
+            <ProductMeta Prod="prod"></ProductMeta>
+        }
+    }
 </section>
 
 @code {
+    public ProductMetaData[] Products { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        Products = await Http.GetFromJsonAsync<ProductMetaData[]>("Basket/ProductsInBasket");
+    }
 }

@@ -7,6 +7,7 @@ namespace PaymentGateway.Server.Data
 {
     public class StoreDbContext : DbContext
     {
+        public DbSet<Basket> Baskets { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Merchant> Merchants { get; set; }
 

@@ -1,24 +1,32 @@
 ﻿@page "/store"
-@using PaymentGateway.Data
+@using Microsoft.AspNetCore.Authorization
+
+@using PaymentGateway.Data.ViewModels
+
 @inject HttpClient Http
+@attribute [Authorize]
 
 <h3>Store</h3>
 
-<section class="products">
-    @if (Products != null)
-    {
+@if (Products != null)
+{
+    <section class="products">
         @foreach (var prod in Products)
         {
             <ProductMeta Prod="prod"></ProductMeta>
         }
-    }
-</section>
+    </section>
+}
+else
+{
+    <p>Loading products...</p>
+}
 
 @code {
-    public Product[] Products { get; set; }
+    public ProductMetaData[] Products { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Products = await Http.GetFromJsonAsync<Product[]>("Product/List");
+        Products = await Http.GetFromJsonAsync<ProductMetaData[]>("Product/List");
     }
 }

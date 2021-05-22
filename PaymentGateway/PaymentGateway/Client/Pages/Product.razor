@@ -1,0 +1,55 @@
+﻿@page "/product/{productId}"
+@using Microsoft.AspNetCore.Authorization
+
+@using PaymentGateway.Data.ViewModels
+
+@inject HttpClient Http
+@attribute [Authorize]
+
+@if (CurrentProduct != null)
+{
+    <h3>@CurrentProduct.Name</h3>
+
+    <div class="product-card">
+        <div class="product-image">
+            <img src="@CurrentProduct.ImageUrl">
+        </div>
+        <div class="product-info">
+            <h5>@CurrentProduct.Name</h5>
+            <h6>£@CurrentProduct.Amount</h6>
+            <h6><b>@CurrentProduct.MerchantName</b></h6>
+        </div>
+    </div>
+    <div>
+        <p>
+            @CurrentProduct.Description
+        </p>
+    </div>
+    <div>
+        <button class="btn" @onclick="AddToBasket">
+            <span class="oi oi-plus" aria-hidden="true"></span> Add to Basket
+        </button>
+    </div>
+}
+else
+{
+    <p>Loading product...</p>
+}
+
+
+@code {
+    [Parameter]
+    public string ProductId { get; set; }
+
+    public ProductDetail CurrentProduct { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentProduct = await Http.GetFromJsonAsync<ProductDetail>($"Product?id={ProductId}");
+    }
+
+    private async Task AddToBasket()
+    {
+        await Http.GetAsync($"Basket/AddToBasket?id={ProductId}");
+    }
+}
