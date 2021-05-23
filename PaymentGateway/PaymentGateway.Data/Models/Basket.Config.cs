@@ -15,7 +15,7 @@ namespace PaymentGateway.Data
             builder.Property(m => m.OwnedByUser)
                 .IsRequired();
 
-            builder.HasMany(m => m.Products);
+            builder.HasMany(m => m.Items);
         }
     }
 }

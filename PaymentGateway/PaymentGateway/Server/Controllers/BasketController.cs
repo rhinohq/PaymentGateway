@@ -30,17 +30,15 @@ namespace PaymentGateway.Server.Controllers
             _storeDbContext = storeDbContext ?? throw new ArgumentNullException(nameof(storeDbContext));
         }
 
-        [HttpGet("Get")]
-        public IActionResult Get(Guid id)
+        [HttpGet]
+        public async Task<IActionResult> Get()
         {
-            var prod = _storeDbContext.Products
-                .Include(x => x.Merchant)
-                .FirstOrDefault(x => x.ProductId == id);
+            var basket = await GetUserBasketAsync();
 
-            if (prod == null)
+            if (basket == null)
                 return Ok(null);
 
-            return Ok(prod.ToProdDetail());
+            return Ok(basket.ToBasketDetail());
         }
 
         [HttpGet("AddToBasket")]
@@ -58,18 +56,33 @@ namespace PaymentGateway.Server.Controllers
             if (basket == null)
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var newItem = new BasketItem(prod);
+
+                _storeDbContext.BasketItems.Add(newItem);
 
                 basket = new Basket
                 {
                     OwnedByUser = userId,
-                    Products = new List<Product> { prod }
+                    Items = new List<BasketItem> { newItem }
                 };
 
                 _storeDbContext.Baskets.Add(basket);
             }
             else
             {
-                basket.Products.Add(prod);
+                var item = basket.Items.FirstOrDefault(x => x.Product.ProductId == prod.ProductId);
+
+                if (item == null)
+                {
+                    var newItem = new BasketItem(prod);
+
+                    _storeDbContext.BasketItems.Add(newItem);
+                    basket.Items.Add(newItem);
+                }
+                else
+                {
+                    item.Quantity++;
+                }
 
                 _storeDbContext.Baskets.Update(basket);
             }
@@ -87,14 +100,14 @@ namespace PaymentGateway.Server.Controllers
             if (basket == null)
                 return Ok(new ProductMetaData[0]);
             else
-                return Ok(basket.Products.Select(x => x.ToProdMeta()));
+                return Ok(basket.Items.Select(x => x.Product.ToProdMeta()));
         }
 
         private async Task<Basket> GetUserBasketAsync()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var basket = await _storeDbContext.Baskets
-                .Include(x => x.Products).ThenInclude(x => x.Merchant)
+                .Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Merchant)
                 .FirstOrDefaultAsync(x => x.OwnedByUser == userId);
 
             return basket;

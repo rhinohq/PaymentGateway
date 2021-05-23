@@ -6,23 +6,34 @@
 @inject HttpClient Http
 @attribute [Authorize]
 
-<h3>Basket</h3>
+<h3>Basket @TitleAddendum</h3>
 
-<section class="products">
-    @if (Products != null)
-    {
-        @foreach (var prod in Products)
+@if (UserBasket != null)
+{
+    <section class="products">
+        @foreach (var item in UserBasket.Items)
         {
-            <ProductMeta Prod="prod"></ProductMeta>
+            <ProductMeta Prod="item.Product"></ProductMeta>
+            <div>
+                <input type="number" value="@item.Quantity" />
+            </div>
         }
-    }
-</section>
+    </section>
+}
+else
+{
+    <p>Loading your basket...</p>
+}
 
 @code {
-    public ProductMetaData[] Products { get; set; }
+    public BasketDetail UserBasket { get; set; }
+
+    public string TitleAddendum => UserBasket != null
+        ? $"- {UserBasket.Size} Items"
+        : string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        Products = await Http.GetFromJsonAsync<ProductMetaData[]>("Basket/ProductsInBasket");
+        UserBasket = await Http.GetFromJsonAsync<BasketDetail>("Basket");
     }
 }

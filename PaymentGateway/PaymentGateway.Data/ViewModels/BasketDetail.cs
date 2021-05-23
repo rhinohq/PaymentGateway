@@ -2,21 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PaymentGateway.Data
+namespace PaymentGateway.Data.ViewModels
 {
-    public class Basket
+    public class BasketDetail
     {
         public Guid BasketId { get; set; }
 
-        public string OwnedByUser { get; set; }
-
-        public List<BasketItem> Items { get; set; }
+        public List<BasketItemDetail> Items { get; set; }
 
         public int Size => Items != null ? Items.Sum(x => x.Quantity) : 0;
 
-        public Basket()
+        public BasketDetail()
         {
-            BasketId = Guid.NewGuid();
         }
     }
 }
