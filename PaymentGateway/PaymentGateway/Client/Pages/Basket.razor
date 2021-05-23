@@ -4,9 +4,20 @@
 @using PaymentGateway.Data.ViewModels
 
 @inject HttpClient Http
+@inject NavigationManager NavManager
 @attribute [Authorize]
 
-<h3>Basket @TitleAddendum</h3>
+<div>
+    <div style="float: right;">
+        <button class="btn" @onclick="GoToCheckout">
+            <span class="oi oi-cart" aria-hidden="true"></span> Checkout
+        </button>
+    </div>
+
+    <h3>Basket @TitleAddendum</h3>
+</div>
+
+<br />
 
 @if (UserBasket != null)
 {
@@ -15,7 +26,7 @@
         {
             <ProductMeta Prod="item.Product"></ProductMeta>
             <div>
-                <input type="number" value="@item.Quantity" />
+                <input type="number" value="@item.Quantity" min="0" />
             </div>
         }
     </section>
@@ -35,5 +46,10 @@ else
     protected override async Task OnInitializedAsync()
     {
         UserBasket = await Http.GetFromJsonAsync<BasketDetail>("Basket");
+    }
+
+    private void GoToCheckout()
+    {
+        NavManager.NavigateTo("/checkout");
     }
 }
