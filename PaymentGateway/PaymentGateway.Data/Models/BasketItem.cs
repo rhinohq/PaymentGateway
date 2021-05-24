@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PaymentGateway.Data
+namespace PaymentGateway.Data.Models
 {
     public class BasketItem
     {

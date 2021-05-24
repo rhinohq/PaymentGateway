@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
+using PaymentGateway.Data;
 using PaymentGateway.Data.Extensions;
-using PaymentGateway.Server.Data;
 
 namespace PaymentGateway.Server.Controllers
 {

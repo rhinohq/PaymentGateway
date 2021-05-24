@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using PaymentGateway.Data.Extensions;
 
-namespace PaymentGateway.Data
+namespace PaymentGateway.Data.Models
 {
     public class BasketItemConfiguration : IEntityTypeConfiguration<BasketItem>
     {

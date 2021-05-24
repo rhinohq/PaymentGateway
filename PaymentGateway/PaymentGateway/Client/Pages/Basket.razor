@@ -9,7 +9,7 @@
 
 <div>
     <div style="float: right;">
-        <button class="btn" @onclick="GoToCheckout">
+        <button class="btn" @onclick="GoToCheckout" disabled="@(UserBasket == null)">
             <span class="oi oi-cart" aria-hidden="true"></span> Checkout
         </button>
     </div>
@@ -21,15 +21,24 @@
 
 @if (UserBasket != null)
 {
-    <section class="products">
-        @foreach (var item in UserBasket.Items)
-        {
-            <ProductMeta Prod="item.Product"></ProductMeta>
-            <div>
-                <input type="number" value="@item.Quantity" min="0" />
-            </div>
-        }
-    </section>
+    <EditForm EditContext="@EditContext">
+        <section class="products">
+            @foreach (var item in UserBasket.Items)
+            {
+                <ProductMeta Prod="item.Product"></ProductMeta>
+
+                <div>
+                    <InputNumber @bind-Value="item.Quantity" @onchange="UpdateBasket" min="0"></InputNumber>
+                </div>
+            }
+        </section>
+    </EditForm>
+
+    <hr />
+
+    <div style="float: right;">
+        <p><b>Total:</b> @TotalCost</p>
+    </div>
 }
 else
 {
@@ -37,19 +46,37 @@ else
 }
 
 @code {
-    public BasketDetail UserBasket { get; set; }
+    private EditContext EditContext;
+    private BasketDetail UserBasket { get; set; }
 
-    public string TitleAddendum => UserBasket != null
+    private string TitleAddendum => UserBasket != null
         ? $"- {UserBasket.Size} Items"
         : string.Empty;
+
+    private string TotalCost => UserBasket != null
+        ? $"£{UserBasket.TotalCost}"
+        : "£0.00";
 
     protected override async Task OnInitializedAsync()
     {
         UserBasket = await Http.GetFromJsonAsync<BasketDetail>("Basket");
+
+        EditContext = new EditContext(UserBasket);
+        EditContext.OnFieldChanged += async (s, e) => await EditContext_OnFieldChanged(s, e);
+    }
+
+    private async Task UpdateBasket()
+    {
+        var response = await Http.PutAsJsonAsync("Basket/Update", UserBasket);
     }
 
     private void GoToCheckout()
     {
         NavManager.NavigateTo("/checkout");
+    }
+
+    private async Task EditContext_OnFieldChanged(object sender, FieldChangedEventArgs e)
+    {
+        await UpdateBasket();
     }
 }

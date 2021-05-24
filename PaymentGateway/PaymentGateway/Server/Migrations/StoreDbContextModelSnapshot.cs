@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PaymentGateway.Server.Data;
+using PaymentGateway.Data;
 
 namespace PaymentGateway.Server.Migrations
 {

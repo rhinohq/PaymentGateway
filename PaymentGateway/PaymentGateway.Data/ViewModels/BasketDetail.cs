@@ -11,6 +11,7 @@ namespace PaymentGateway.Data.ViewModels
         public List<BasketItemDetail> Items { get; set; }
 
         public int Size => Items != null ? Items.Sum(x => x.Quantity) : 0;
+        public decimal TotalCost => Items != null ? Items.Sum(x => x.Product.Amount * x.Quantity) : 0;
 
         public BasketDetail()
         {

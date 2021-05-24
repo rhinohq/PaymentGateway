@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PaymentGateway.Data
+namespace PaymentGateway.Data.Models
 {
     public class Basket
     {

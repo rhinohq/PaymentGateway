@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
-using PaymentGateway.Data;
+using PaymentGateway.Data.Models;
 
-namespace PaymentGateway.Server.Data
+namespace PaymentGateway.Data
 {
     public class StoreDbContext : DbContext
     {

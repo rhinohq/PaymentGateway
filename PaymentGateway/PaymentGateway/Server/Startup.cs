@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
+
+using PaymentGateway.Data;
 using PaymentGateway.Server.Data;
 using PaymentGateway.Server.Models;
 
@@ -31,6 +32,7 @@ namespace PaymentGateway.Server
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<StoreDbContext>();
+            services.AddAutoMapper(typeof(StoreDbContext).Assembly);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 

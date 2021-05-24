@@ -10,9 +10,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 using PaymentGateway.Data;
+using PaymentGateway.Data.Models;
 using PaymentGateway.Data.Extensions;
 using PaymentGateway.Data.ViewModels;
-using PaymentGateway.Server.Data;
+
+using AutoMapper;
 
 namespace PaymentGateway.Server.Controllers
 {
@@ -22,11 +24,13 @@ namespace PaymentGateway.Server.Controllers
     public class BasketController : ControllerBase
     {
         private readonly ILogger<BasketController> _logger;
+        private readonly IMapper _mapper;
         private readonly StoreDbContext _storeDbContext;
 
-        public BasketController(ILogger<BasketController> logger, StoreDbContext storeDbContext)
+        public BasketController(ILogger<BasketController> logger, IMapper mapper, StoreDbContext storeDbContext)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
             _storeDbContext = storeDbContext ?? throw new ArgumentNullException(nameof(storeDbContext));
         }
 
@@ -41,19 +45,46 @@ namespace PaymentGateway.Server.Controllers
             return Ok(basket.ToBasketDetail());
         }
 
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update(BasketDetail newBasket)
+        {
+            var basket = await GetUserBasketAsync();
+
+            if (basket == null)
+                return BadRequest();
+
+            var mappedBasket = _mapper.Map(newBasket, basket);
+
+            for (int i = 0; i < mappedBasket.Items.Count; i++)
+            {
+                BasketItem item = mappedBasket.Items[i];
+                var dbItem = await GetBasketItemAsync(item.BasketItemId);
+
+                if (dbItem != null)
+                {
+                    dbItem.Product = await GetProductAsync(item.Product.ProductId);
+                    dbItem.Quantity = item.Quantity;
+
+                    mappedBasket.Items[i] = dbItem;
+                }
+            }
+
+            await _storeDbContext.SaveChangesAsync();
+
+            return Ok();
+        }
+
         [HttpGet("AddToBasket")]
         public async Task<IActionResult> AddToBasket(Guid id)
         {
-            var prod = await _storeDbContext.Products
-                .Include(x => x.Merchant)
-                .FirstOrDefaultAsync(x => x.ProductId == id);
+            var prod = await GetProductAsync(id);
 
             if (prod == null)
                 return NotFound();
 
             var basket = await GetUserBasketAsync();
 
-            if (basket == null)
+            if (basket == null) // New basket
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var newItem = new BasketItem(prod);
@@ -68,7 +99,7 @@ namespace PaymentGateway.Server.Controllers
 
                 _storeDbContext.Baskets.Add(basket);
             }
-            else
+            else // Existing basket
             {
                 var item = basket.Items.FirstOrDefault(x => x.Product.ProductId == prod.ProductId);
 
@@ -111,6 +142,35 @@ namespace PaymentGateway.Server.Controllers
                 .FirstOrDefaultAsync(x => x.OwnedByUser == userId);
 
             return basket;
+        }
+
+        private Basket CreateUserBasket()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            return new Basket
+            {
+                OwnedByUser = userId,
+                Items = new List<BasketItem>()
+            };
+        }
+
+        private async Task<BasketItem> GetBasketItemAsync(Guid id)
+        {
+            var item = await _storeDbContext.BasketItems
+                .Include(x => x.Product)
+                .FirstOrDefaultAsync(x => x.BasketItemId == id);
+
+            return item;
+        }
+
+        private async Task<Product> GetProductAsync(Guid id)
+        {
+            var prod = await _storeDbContext.Products
+                .Include(x => x.Merchant)
+                .FirstOrDefaultAsync(x => x.ProductId == id);
+
+            return prod;
         }
     }
 }

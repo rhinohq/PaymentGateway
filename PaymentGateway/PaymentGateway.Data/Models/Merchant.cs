@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PaymentGateway.Data
+namespace PaymentGateway.Data.Models
 {
     public class Merchant
     {

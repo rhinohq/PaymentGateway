@@ -1,4 +1,5 @@
-﻿using PaymentGateway.Data.ViewModels;
+﻿using PaymentGateway.Data.Models;
+using PaymentGateway.Data.ViewModels;
 
 namespace PaymentGateway.Data.Extensions
 {
