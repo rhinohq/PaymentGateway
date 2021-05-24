@@ -9,6 +9,8 @@ namespace PaymentGateway.Data.ViewModels
 
         public ProductMetaData Product { get; set; }
 
+        public decimal TotalCost => Product != null ? Product.Amount * Quantity : 0;
+
         public BasketItemDetail()
         {
         }
