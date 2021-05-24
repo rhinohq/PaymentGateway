@@ -8,7 +8,15 @@
 
 @if (CurrentProduct != null)
 {
-    <h3>@CurrentProduct.Name</h3>
+    <div>
+        <div style="float: right;">
+            <button class="btn" @onclick="AddToBasket">
+                <span class="oi oi-plus" aria-hidden="true"></span> Add to Basket
+            </button>
+        </div>
+
+        <h3>@CurrentProduct.Name</h3>
+    </div>
 
     <div class="product-card">
         <div class="product-image">
@@ -24,11 +32,6 @@
         <p>
             @CurrentProduct.Description
         </p>
-    </div>
-    <div>
-        <button class="btn" @onclick="AddToBasket">
-            <span class="oi oi-plus" aria-hidden="true"></span> Add to Basket
-        </button>
     </div>
 }
 else
