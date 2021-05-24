@@ -10,12 +10,18 @@
     <link href="css/app.css" rel="stylesheet" />
     <link href="css/products.css" rel="stylesheet" />
     <link href="PaymentGateway.Client.styles.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="manifest.json" rel="manifest" />
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
 </head>
 
 <body>
-    <div id="app">Loading...</div>
+    <div id="app">
+        <div style="position:absolute; top:30vh; width:100%; text-align:center">
+            <h1>Payment Gateway</h1>
+            <p><i class="fa fa-spinner fa-spin"></i> The application is loading...</p>
+        </div>
+    </div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.
