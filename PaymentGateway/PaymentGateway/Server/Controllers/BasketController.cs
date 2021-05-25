@@ -139,7 +139,7 @@ namespace PaymentGateway.Server.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var basket = await _storeDbContext.Baskets
                 .Include(x => x.Items).ThenInclude(x => x.Product).ThenInclude(x => x.Merchant)
-                .FirstOrDefaultAsync(x => x.OwnedByUser == userId);
+                .FirstOrDefaultAsync(x => x.OwnedByUser == userId && !x.Fufilled);
 
             return basket;
         }

@@ -9,8 +9,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using PaymentGateway.Data;
+
 using PaymentGateway.Server.Data;
 using PaymentGateway.Server.Models;
+
+using PaymentGateway.Banking.Providers;
 
 namespace PaymentGateway.Server
 {
@@ -32,7 +35,7 @@ namespace PaymentGateway.Server
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDbContext<StoreDbContext>();
-            services.AddAutoMapper(typeof(StoreDbContext).Assembly);
+            services.AddAutoMapper(typeof(StoreDbContext).Assembly, typeof(Startup).Assembly);
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -47,6 +50,8 @@ namespace PaymentGateway.Server
 
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            services.AddTransient<IBankProvider, BankProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

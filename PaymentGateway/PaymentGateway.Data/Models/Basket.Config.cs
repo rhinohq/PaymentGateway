@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using PaymentGateway.Data.Extensions;
@@ -16,6 +15,9 @@ namespace PaymentGateway.Data.Models
                 .IsRequired();
 
             builder.HasMany(m => m.Items);
+            builder.HasOne(m => m.Invoice)
+                .WithOne(m => m.Basket)
+                .HasForeignKey<Invoice>(m => m.BasketId);
         }
     }
 }

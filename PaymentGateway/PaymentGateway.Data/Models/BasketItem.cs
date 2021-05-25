@@ -10,6 +10,8 @@ namespace PaymentGateway.Data.Models
 
         public Product Product { get; set; }
 
+        public decimal TotalCost => Product != null ? Product.Amount * Quantity : 0;
+
         public BasketItem()
         {
             BasketItemId = Guid.NewGuid();
