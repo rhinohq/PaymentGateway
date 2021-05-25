@@ -1,8 +1,7 @@
 ﻿using System;
-
-namespace PaymentGateway.Data.Models
+namespace PaymentGateway.Data.ViewModels
 {
-    public class Invoice
+    public class InvoiceDetail
     {
         public Guid InvoiceId { get; set; }
 
@@ -23,15 +22,11 @@ namespace PaymentGateway.Data.Models
         public string State { get; set; }
         public string Zip { get; set; }
 
-        public Guid BankResponseId { get; set; }
-        public BankResponse BankResponse { get; set; }
+        public BankResponseDetail BankResponse { get; set; }
+        public BasketDetail Basket { get; set; }
 
-        public Guid BasketId { get; set; }
-        public Basket Basket { get; set; }
-
-        public Invoice()
+        public InvoiceDetail()
         {
-            InvoiceId = Guid.NewGuid();
         }
     }
 }

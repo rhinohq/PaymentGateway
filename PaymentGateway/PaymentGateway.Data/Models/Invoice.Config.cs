@@ -11,6 +11,8 @@ namespace PaymentGateway.Data.Models
         {
             builder.GuidIdentity(m => m.InvoiceId);
 
+            builder.Property(m => m.InvoiceTime);
+
             builder.Property(m => m.FullName);
             builder.Property(m => m.Email);
 

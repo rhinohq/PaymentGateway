@@ -9,6 +9,7 @@ namespace PaymentGateway.Data.ViewModels
         public ProductMetaData_Mapping()
         {
             CreateMap<ProductMetaData, Product>();
+            CreateMap<Product, ProductMetaData>();
         }
     }
 }

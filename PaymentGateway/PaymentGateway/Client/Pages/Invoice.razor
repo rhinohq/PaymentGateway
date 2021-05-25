@@ -1,0 +1,72 @@
+﻿@page "/invoice/{invoiceId}"
+@using Microsoft.AspNetCore.Authorization
+
+@using PaymentGateway.Data.ViewModels
+
+@inject HttpClient Http
+@attribute [Authorize]
+
+<h3>Invoice</h3>
+
+<br />
+
+@if (CurrentInvoice != null)
+{
+    <p><b>Invoice Time:</b> @CurrentInvoice.InvoiceTime.ToString("dd/MM/yyyy HH:mm")</p>
+    <hr />
+
+    <section class="bank-response">
+        <p><b>Payment ID:</b> @CurrentInvoice.BankResponse.PaymentId</p>
+        <p><b>Status Code:</b> @CurrentInvoice.BankResponse.StatusCode</p>
+    </section>
+    <hr />
+
+    <section class="details">
+        <p><b>Full Name:</b> @CurrentInvoice.FullName</p>
+        <p><b>Email:</b> @CurrentInvoice.Email</p>
+
+        <p><b>Name on Card:</b> @CurrentInvoice.NameOnCard</p>
+        <p><b>Card Number:</b> @CurrentInvoice.CardNumber</p>
+        <p><b>CVV:</b> @CurrentInvoice.Cvv</p>
+        <p><b>Expiry date:</b> @CurrentInvoice.ExpiryMonth/@CurrentInvoice.ExpiryYear</p>
+
+        <p><b>Address:</b> @CurrentInvoice.Address</p>
+        <p><b>City:</b> @CurrentInvoice.City</p>
+        <p><b>State:</b> @CurrentInvoice.State</p>
+        <p><b>Zip:</b> @CurrentInvoice.Zip</p>
+    </section>
+    <hr />
+
+    <section class="products">
+        @foreach (var item in CurrentInvoice.Basket.Items)
+        {
+            <ProductMeta Prod="item.Product"></ProductMeta>
+
+            <div>
+                <input type="text" value="@item.Quantity" min="0" disabled="disabled" />
+            </div>
+        }
+    </section>
+
+    <hr />
+
+    <div style="float: right;">
+        <p><b>Total:</b> £@CurrentInvoice.Basket.TotalCost</p>
+    </div>
+}
+else
+{
+    <p>Loading invoice...</p>
+}
+
+@code {
+    [Parameter]
+    public string InvoiceId { get; set; }
+
+    public InvoiceDetail CurrentInvoice { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CurrentInvoice = await Http.GetFromJsonAsync<InvoiceDetail>($"Invoice?id={InvoiceId}");
+    }
+}

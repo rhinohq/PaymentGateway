@@ -59,6 +59,7 @@ namespace PaymentGateway.Server.Controllers
             var invoice = _mapper.Map(form, new Invoice());
             invoice.BankResponse = bankResponse;
             invoice.Basket = basket;
+            invoice.InvoiceTime = DateTime.UtcNow;
 
             _storeDbContext.BankResponses.Add(bankResponse);
             _storeDbContext.Invoices.Add(invoice);

@@ -1,5 +1,5 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+
 using PaymentGateway.Data.Models;
 
 namespace PaymentGateway.Data.ViewModels
@@ -8,7 +8,7 @@ namespace PaymentGateway.Data.ViewModels
     {
         public BasketItemDetail_Mapping()
         {
-            CreateMap<BasketItemDetail, BasketItem>();
+            CreateMap<BasketItem, BasketItemDetail>();
         }
     }
 }

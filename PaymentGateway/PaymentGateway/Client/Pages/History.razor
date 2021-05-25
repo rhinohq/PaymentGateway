@@ -8,6 +8,49 @@
 
 <h3>Order History</h3>
 
-@code {
+<br />
 
+@if (Invoices != null)
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Cost</th>
+                <th>Status Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var invoice in Invoices.OrderByDescending(x => x.InvoiceTime))
+            {
+                <tr>
+                    <td>
+                        <NavLink href="@string.Format("invoice/{0}", invoice.InvoiceId)" Match="NavLinkMatch.All">
+                            @invoice.InvoiceTime.ToString("dd/MM/yyyy HH:mm")
+                        </NavLink>
+                        
+                    </td>
+                    <td>£@invoice.OrderCost</td>
+                    <td class="@StatusCodeClass(invoice.BankStatusCode)">@invoice.BankStatusCode</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Loading your order history...</p>
+}
+
+@code {
+    public InvoiceMeta[] Invoices { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Invoices = await Http.GetFromJsonAsync<InvoiceMeta[]>("Invoice/List");
+    }
+    private string StatusCodeClass(int statusCode)
+    {
+        return statusCode >= 50 ? "bank-success" : "bank-fail";
+    }
 }
