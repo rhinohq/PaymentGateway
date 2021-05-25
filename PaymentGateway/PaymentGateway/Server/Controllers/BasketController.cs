@@ -40,7 +40,12 @@ namespace PaymentGateway.Server.Controllers
             var basket = await GetUserBasketAsync();
 
             if (basket == null)
-                return Ok(null);
+                return Ok(
+                    new BasketDetail()
+                    {
+                        Items = new List<BasketItemDetail>()
+                    }
+                );
 
             return Ok(basket.ToBasketDetail());
         }
