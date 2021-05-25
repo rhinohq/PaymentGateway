@@ -9,6 +9,7 @@ namespace PaymentGateway.Data.ViewModels
         public BasketItemDetail_Mapping()
         {
             CreateMap<BasketItem, BasketItemDetail>();
+            CreateMap<BasketItemDetail, BasketItem>();
         }
     }
 }

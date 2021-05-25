@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 
 using PaymentGateway.Data;
 using PaymentGateway.Data.Models;
-using PaymentGateway.Data.Extensions;
 using PaymentGateway.Data.ViewModels;
 
 using AutoMapper;
@@ -47,7 +46,9 @@ namespace PaymentGateway.Server.Controllers
                     }
                 );
 
-            return Ok(basket.ToBasketDetail());
+            var basketDetail = _mapper.Map(basket, new BasketDetail());
+
+            return Ok(basketDetail);
         }
 
         [HttpPut("Update")]
@@ -60,7 +61,7 @@ namespace PaymentGateway.Server.Controllers
 
             var mappedBasket = _mapper.Map(newBasket, basket);
 
-            for (int i = 0; i < mappedBasket.Items.Count; i++)
+            for (int i = 0; i < mappedBasket.Items.Count; i++) // Retrieve tracked entities from database
             {
                 BasketItem item = mappedBasket.Items[i];
                 var dbItem = await GetBasketItemAsync(item.BasketItemId);
@@ -128,17 +129,6 @@ namespace PaymentGateway.Server.Controllers
             return Ok();
         }
 
-        [HttpGet("ProductsInBasket")]
-        public async Task<IActionResult> ProductsInBasket()
-        {
-            var basket = await GetUserBasketAsync();
-
-            if (basket == null)
-                return Ok(new ProductMetaData[0]);
-            else
-                return Ok(basket.Items.Select(x => x.Product.ToProdMeta()));
-        }
-
         private async Task<Basket> GetUserBasketAsync()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -147,17 +137,6 @@ namespace PaymentGateway.Server.Controllers
                 .FirstOrDefaultAsync(x => x.OwnedByUser == userId && !x.Fufilled);
 
             return basket;
-        }
-
-        private Basket CreateUserBasket()
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            return new Basket
-            {
-                OwnedByUser = userId,
-                Items = new List<BasketItem>()
-            };
         }
 
         private async Task<BasketItem> GetBasketItemAsync(Guid id)

@@ -9,7 +9,7 @@
 
 <div>
     <div style="float: right;">
-        <button class="btn" @onclick="GoToCheckout" disabled="@(UserBasket == null)">
+        <button class="btn" @onclick="GoToCheckout" disabled="@(UserBasket == null || UserBasket.Size == 0)">
             <span class="oi oi-cart" aria-hidden="true"></span> Checkout
         </button>
     </div>

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +13,7 @@ using Microsoft.Extensions.Logging;
 
 using PaymentGateway.Banking.Providers;
 using PaymentGateway.Data;
-using PaymentGateway.Data.Models;
 using PaymentGateway.Data.ViewModels;
-using PaymentGateway.Server.Extensions;
 
 namespace PaymentGateway.Server.Controllers
 {
