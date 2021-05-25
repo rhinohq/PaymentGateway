@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Client\PaymentGateway.Client.csproj" />
-    <ProjectReference Include="..\Shared\PaymentGateway.Shared.csproj" />
     <ProjectReference Include="..\..\PaymentGateway.Data\PaymentGateway.Data.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
     </ProjectReference>
