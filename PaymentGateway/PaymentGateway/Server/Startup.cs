@@ -51,7 +51,7 @@ namespace PaymentGateway.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
 
-            services.AddTransient<IBankProvider, BankProvider>();
+            services.AddTransient<IBankProvider, MockBankProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

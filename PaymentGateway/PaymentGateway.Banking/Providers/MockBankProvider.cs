@@ -3,18 +3,21 @@ using PaymentGateway.Banking.Models;
 
 namespace PaymentGateway.Banking.Providers
 {
-    public class BankProvider : IBankProvider
+    public class MockBankProvider : IBankProvider
     {
-        public BankProvider()
+        public MockBankProvider()
         {
         }
 
         public PaymentResponse ProcessPayment(PaymentRequest request)
         {
+            Random rnd = new Random();
+            int statusCode = rnd.Next(100); // statusCode >= 50 is successful payment
+
             return new PaymentResponse
             {
                 PaymentId = Guid.NewGuid(),
-                StatusCode = 50
+                StatusCode = statusCode
             };
         }
     }
