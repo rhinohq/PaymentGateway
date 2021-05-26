@@ -39,7 +39,7 @@ jobs:
           
       - name: Build Server image
         run: docker build -t ryanjkendrick/payment-gateway -f
-             ./PaymentGateway/PaymentGateway/PaymentGateway/Server/Dockerfile ./PaymentGateway/PaymentGateway/PaymentGateway/Server
+             ./PaymentGateway/PaymentGateway/PaymentGateway/Server/Dockerfile ./
       - name: Tag our Image
         run: docker tag ryanjkendrick/payment-gateway 
              ryanjkendrick/payment-gateway:latest
